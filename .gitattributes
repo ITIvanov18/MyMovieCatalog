@@ -9,3 +9,16 @@
 /.github export-ignore
 CHANGELOG.md export-ignore
 .styleci.yml export-ignore
+
+composer.lock linguist-vendored
+package-lock.json linguist-vendored
+
+public/build/* linguist-vendored
+public/assets/* linguist-vendored
+
+resources/views/auth/* linguist-vendored
+resources/views/layouts/* linguist-vendored
+resources/views/components/* linguist-vendored
+resources/views/profile/* linguist-vendored
+resources/views/welcome.blade.php linguist-vendored
+resources/views/dashboard.blade.php linguist-vendored
