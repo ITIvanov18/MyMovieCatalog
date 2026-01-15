@@ -22,7 +22,7 @@ class MovieController extends Controller
             'year' => 'required|integer',
             'genre' => 'required',
             'description' => 'required',
-            'poster' => 'image|mimes:jpeg,png,jpg|max:2048', // снимки до 2MB
+            'poster' => 'image|mimes:jpeg,png,jpg|max:5120', // снимки до 5MB
         ]);
 
         // качване на снимката (ако има такава)
@@ -41,6 +41,6 @@ class MovieController extends Controller
             'rating' => 0, // начален рейтинг
         ]);
 
-        return redirect('/dashboard')->with('success', 'Филмът е добавен успешно!');
+        return redirect('/dashboard')->with('success', 'Movie added successfully!');
     }
 }
