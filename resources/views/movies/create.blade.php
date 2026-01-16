@@ -16,6 +16,11 @@
                             <input type="text" name="title" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                         </div>
 
+                        <div class="mb-4">
+                            <label class="block text-gray-700 font-bold mb-2">Director</label>
+                            <input type="text" name="director" class="w-full border rounded px-3 py-2" required>
+                        </div>
+
                         <div class="flex gap-4 mb-4">
                             <div class="w-1/2">
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Year:</label>
@@ -27,10 +32,12 @@
                                     <option>Action</option>
                                     <option>Drama</option>
                                     <option>Comedy</option>
-                                    <option>Science Fiction</option>
+                                    <option>Sci-Fi</option>
                                     <option>Horror</option>
                                     <option>Romance</option>
                                     <option>Documentary</option>
+                                    <option>Biography</option>
+                                    <option>Fantasy</option>
                                     <option>Thriller</option>
                                     <option>Anime</option>
                                 </select>

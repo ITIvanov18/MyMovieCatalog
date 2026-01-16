@@ -3,40 +3,48 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MovieController;
-use App\Http\Middleware\AdminMiddleware;
 use App\Models\Movie;
 use Illuminate\Support\Facades\Route;
 
+/*
+|--------------------------------------------------------------------------
+| ПУБЛИЧНИ МАРШРУТИ (достъпни за всички)
+|--------------------------------------------------------------------------
+*/
+
 // начална страница
 Route::get('/', function () {
-    // взема филмите от базата (най-новите най-отпред)
     $movies = Movie::latest()->get();
-
-    // праща ги на view-то чрез compact
     return view('welcome', compact('movies'));
 });
 
-// dashboard
+
+/*
+|--------------------------------------------------------------------------
+| ЗАЩИТЕНИ МАРШРУТИ (само за логнати потребители/админи)
+|--------------------------------------------------------------------------
+*/
+
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
-// профил на потребителя
 Route::middleware('auth')->group(function () {
+    // управление на профила
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
 
-// админ панел (за филмите)
-// трябва задължително да си логнат И си admin
-Route::middleware(['auth', AdminMiddleware::class])->group(function () { 
+    // управление на филми (create, edit, update)
     Route::get('/movies/create', [MovieController::class, 'create'])->name('movies.create');
     Route::post('/movies', [MovieController::class, 'store'])->name('movies.store');
+    
+    // маршрути за редакция:
+    Route::get('/movies/{movie}/edit', [MovieController::class, 'edit'])->name('movies.edit');
+    Route::put('/movies/{movie}', [MovieController::class, 'update'])->name('movies.update');
 });
 
-// маршрут за разглеждане на единичен филм
+// преглед на отделен филм
 Route::get('/movies/{movie}', [MovieController::class, 'show'])->name('movies.show');
 
-// зареждане на Auth routes (login/register)
 require __DIR__.'/auth.php';

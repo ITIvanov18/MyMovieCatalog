@@ -26,18 +26,32 @@
                         </div>
 
                         <div class="w-full md:w-2/3">
+                            
                             <div class="flex justify-between items-start">
                                 <div>
                                     <h1 class="text-4xl font-bold text-gray-900 leading-tight">{{ $movie->title }}</h1>
+                                    
+                                    <p class="text-lg text-gray-600 mt-1">Directed by: <span class="font-semibold text-gray-900">{{ $movie->director ?? 'Unknown' }}</span></p>
+
                                     <div class="mt-3">
                                         <span class="inline-block bg-indigo-100 text-indigo-800 text-sm font-semibold px-3 py-1 rounded-full">
                                             {{ $movie->genre }}
                                         </span>
                                     </div>
                                 </div>
-                                <span class="text-2xl font-bold text-gray-500 border border-gray-200 px-3 py-1 rounded-lg">
-                                    {{ $movie->year }}
-                                </span>
+
+                                <div class="flex flex-col items-end gap-3">
+                                    <span class="text-2xl font-bold text-gray-400 border border-gray-200 px-3 py-1 rounded-lg">
+                                        {{ $movie->year }}
+                                    </span>
+
+                                    @auth
+                                        <a href="{{ route('movies.edit', $movie->id) }}" class="inline-flex items-center px-3 py-1 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none transition ease-in-out duration-150">
+                                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                                            Edit
+                                        </a>
+                                    @endauth
+                                </div>
                             </div>
 
                             <div class="mt-8">

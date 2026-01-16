@@ -19,6 +19,7 @@ class MovieController extends Controller
         // валидация (за да не се чупи, ако полето е празно)
         $validated = $request->validate([
             'title' => 'required|max:255',
+            'director' => 'required',
             'year' => 'required|integer',
             'genre' => 'required',
             'description' => 'required',
@@ -48,5 +49,37 @@ class MovieController extends Controller
     public function show(Movie $movie)
     {
         return view('movies.show', compact('movie'));
+    }
+
+    // показва формата за редакция
+    public function edit(Movie $movie)
+    {
+        return view('movies.edit', compact('movie'));
+    }
+
+    // записва промените в базата
+    public function update(Request $request, Movie $movie)
+    {
+        $request->validate([
+            'title' => 'required',
+            'director' => 'required',
+            'genre' => 'required',
+            'year' => 'required|integer',
+            'description' => 'required',
+            'poster' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+
+        $data = $request->all();
+
+        // логика за смяна на снимката (ако е качена нова)
+        if ($request->hasFile('poster')) {
+            // записва новата
+            $path = $request->file('poster')->store('posters', 'public');
+            $data['poster'] = $path;
+        }
+
+        $movie->update($data);
+
+        return redirect()->route('movies.show', $movie->id);
     }
 }
