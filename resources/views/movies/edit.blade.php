@@ -8,6 +8,18 @@
     <div class="py-12">
         <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+
+            {{-- БЛОК ЗА ГРЕШКИ --}}
+            @if ($errors->any())
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                    <strong>Опа! Има проблем:</strong>
+                    <ul class="list-disc list-inside">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
                 
                 <form action="{{ route('movies.update', $movie->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
@@ -22,7 +34,7 @@
                     </div>
 
                     <div class="flex gap-4 mb-4">
-<div class="w-1/2">
+                        <div class="w-1/2">
                             <label class="block text-gray-700 font-bold mb-2">Genre</label>
                             
                             <select name="genre" class="w-full border rounded px-3 py-2 bg-white text-gray-700 focus:outline-none focus:border-indigo-500" required>

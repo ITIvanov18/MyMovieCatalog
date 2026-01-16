@@ -17,43 +17,48 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             
             @if($movies->count() > 0)
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    @foreach($movies as $movie)
-                        <a href="{{ route('movies.show', $movie->id) }}" class="group bg-white rounded-xl shadow-md overflow-hidden hover:shadow-2xl transition-all duration-300 border border-gray-100 flex flex-col">
-                            
-                            <div class="relative w-full">
-                                @if($movie->poster)
-                                    <img src="{{ asset('storage/' . $movie->poster) }}" 
-                                         alt="{{ $movie->title }}"
-                                         class="movie-card-img transform group-hover:scale-105 transition-transform duration-500">
-                                @else
-                                    <div class="flex items-center justify-center bg-gray-200 text-gray-500" style="aspect-ratio: 16/9;">
-                                        No Image
-                                    </div>
-                                @endif
-                                
-                                <div class="absolute bottom-2 right-2 bg-black/80 text-white text-xs font-bold px-2 py-1 rounded">
-                                    {{ $movie->year }}
-                                </div>
-                            </div>
-                            
-                            <div class="p-5">
-                                <h3 class="text-xl font-bold text-gray-900 truncate mb-1 group-hover:text-indigo-600">
-                                    {{ $movie->title }}
-                                </h3>
-                                <span class="inline-block bg-indigo-50 text-indigo-700 text-xs px-2 py-1 rounded border border-indigo-100 font-semibold">
-                                    {{ $movie->genre }}
-                                </span>
-                            </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                 @foreach ($movies as $movie)
+            <div class="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden flex flex-col h-full group">
+                
+                <a href="{{ route('movies.show', $movie->id) }}" class="relative block w-full aspect-[2/3] overflow-hidden">
+                    @if ($movie->poster)
+                        <img src="{{ asset('storage/' . $movie->poster) }}" 
+                             alt="{{ $movie->title }}" 
+                             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                    @else
+                        <div class="w-full h-full bg-gray-200 flex items-center justify-center text-gray-500">
+                            No Poster
+                        </div>
+                    @endif
+
+                    <div class="absolute top-2 right-2 bg-black/70 text-white text-xs font-bold px-2 py-1 rounded">
+                        {{ $movie->year }}
+                    </div>
+                </a>
+
+                <div class="p-4 flex flex-col flex-1">
+                    <h3 class="font-bold text-lg text-gray-900 mb-1 leading-tight truncate">
+                        <a href="{{ route('movies.show', $movie->id) }}" class="hover:text-indigo-600 transition">
+                            {{ $movie->title }}
                         </a>
-                    @endforeach
+                    </h3>
+
+                    <div class="mt-auto flex justify-between items-center">
+                        <span class="inline-block bg-indigo-50 text-indigo-700 text-xs font-semibold px-2 py-1 rounded-md border border-indigo-100">
+                            {{ $movie->genre }}
+                        </span>
+                    </div>
                 </div>
+            </div>
+        @endforeach
+    </div>
             @else
                 <div class="text-center py-20">
-                    <h3 class="text-xl font-bold text-gray-700">Все още няма филми.</h3>
+                    <h3 class="text-xl font-bold text-gray-700">No movies yet.</h3>
                     @auth
                         <a href="{{ route('movies.create') }}" class="text-indigo-600 hover:underline mt-2 inline-block font-bold">
-                            + Добави филм
+                            + Add your first movie
                         </a>
                     @endauth
                 </div>

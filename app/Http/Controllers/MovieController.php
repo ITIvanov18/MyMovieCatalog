@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Movie;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class MovieController extends Controller
 {
@@ -35,6 +36,7 @@ class MovieController extends Controller
         // създаване на записа в базата
         Movie::create([
             'title' => $request->title,
+            'director' => $request->director,
             'year' => $request->year,
             'genre' => $request->genre,
             'description' => $request->description,
@@ -60,26 +62,37 @@ class MovieController extends Controller
     // записва промените в базата
     public function update(Request $request, Movie $movie)
     {
-        $request->validate([
-            'title' => 'required',
-            'director' => 'required',
-            'genre' => 'required',
-            'year' => 'required|integer',
-            'description' => 'required',
+        // ВАЛИДАЦИЯ
+        $validatedData = $request->validate([
+            'title' => 'required|string|max:255',
+            'director' => 'required|string|max:255',
+            'genre' => 'required|string',
+            'year' => 'required|integer|min:1900|max:'.(date('Y')+5),
+            'description' => 'required|string',
             'poster' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
-        $data = $request->all();
-
-        // логика за смяна на снимката (ако е качена нова)
+        // ОБРАБОТКА НА СНИМКАТА (само ако е качена нова)
         if ($request->hasFile('poster')) {
-            // записва новата
+            // трие старата снимка, за да не се пълни диска
+               if ($movie->poster) {
+                   Storage::disk('public')->delete($movie->poster);
+               }
+
+            // записа новата
             $path = $request->file('poster')->store('posters', 'public');
-            $data['poster'] = $path;
+            $validatedData['poster'] = $path;
+        } else {
+            // ако няма нова снимка:
+            unset($validatedData['poster']);
         }
 
-        $movie->update($data);
+        // ЗАПИС В БАЗАТА
+        // използва $validatedData, за да гарантира, че влиза само позволеното
+        $movie->update($validatedData);
 
-        return redirect()->route('movies.show', $movie->id);
+        // ПРЕНАСОЧВАНЕ
+        return redirect()->route('movies.show', $movie->id)
+                         ->with('success', 'Movie updated successfully!');
     }
 }
