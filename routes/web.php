@@ -4,11 +4,16 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MovieController;
 use App\Http\Middleware\AdminMiddleware;
+use App\Models\Movie;
 use Illuminate\Support\Facades\Route;
 
 // начална страница
 Route::get('/', function () {
-    return view('welcome');
+    // взема филмите от базата (най-новите най-отпред)
+    $movies = Movie::latest()->get();
+
+    // праща ги на view-то чрез compact
+    return view('welcome', compact('movies'));
 });
 
 // dashboard
@@ -29,6 +34,9 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::get('/movies/create', [MovieController::class, 'create'])->name('movies.create');
     Route::post('/movies', [MovieController::class, 'store'])->name('movies.store');
 });
+
+// маршрут за разглеждане на единичен филм
+Route::get('/movies/{movie}', [MovieController::class, 'show'])->name('movies.show');
 
 // зареждане на Auth routes (login/register)
 require __DIR__.'/auth.php';

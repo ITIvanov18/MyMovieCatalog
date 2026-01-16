@@ -43,4 +43,10 @@ class MovieController extends Controller
 
         return redirect('/dashboard')->with('success', 'Movie added successfully!');
     }
+
+    // показва детайли за конкретен филм
+    public function show(Movie $movie)
+    {
+        return view('movies.show', compact('movie'));
+    }
 }
