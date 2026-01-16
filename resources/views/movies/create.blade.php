@@ -46,15 +46,19 @@
 
                         <div class="mb-4">
                             <label class="block text-gray-700 text-sm font-bold mb-2">Description:</label>
-                            <textarea name="description" rows="4" required class="shadow border rounded w-full py-2 px-3 text-gray-700"></textarea>
+                            <textarea name="description" id="description" rows="4" required class="shadow border rounded w-full py-2 px-3 text-gray-700"></textarea>
+                            <div class="flex justify-end">
+                                <small id="char-counter" class="text-gray-500 text-xs mt-1">Checking...</small>
+                            </div>
                         </div>
+                        
 
                         <div class="mb-4">
                             <label class="block text-gray-700 text-sm font-bold mb-2">Poster (Image):</label>
                             <input type="file" name="poster" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
                         </div>
 
-                        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                        <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-bold hover:bg-indigo-700 transition shadow-sm">
                             Save Movie
                         </button>
                     </form>

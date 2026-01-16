@@ -15,11 +15,16 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+
+            <div class="mb-6">
+            <input type="text" id="movie-search" placeholder="Type to search movies..." class="w-full p-2 border rounded-lg shadow-sm">
+            <small id="search-stats" class="text-gray-500"></small>
+            </div>
             
             @if($movies->count() > 0)
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                  @foreach ($movies as $movie)
-            <div class="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden flex flex-col h-full group">
+            <div class="movie-card bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden flex flex-col h-full group">
                 
                 <a href="{{ route('movies.show', $movie->id) }}" class="relative block w-full aspect-[2/3] overflow-hidden">
                     @if ($movie->poster)
@@ -38,7 +43,7 @@
                 </a>
 
                 <div class="p-4 flex flex-col flex-1">
-                    <h3 class="font-bold text-lg text-gray-900 mb-1 leading-tight truncate">
+                    <h3 class="movie-title font-bold text-lg text-gray-900 mb-1 leading-tight truncate">
                         <a href="{{ route('movies.show', $movie->id) }}" class="hover:text-indigo-600 transition">
                             {{ $movie->title }}
                         </a>
