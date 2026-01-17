@@ -44,13 +44,33 @@
                                     <span class="text-2xl font-bold text-gray-400 border border-gray-200 px-3 py-1 rounded-lg">
                                         {{ $movie->year }}
                                     </span>
+                                    
+                                {{-- ЗОНА САМО ЗА АДМИНИСТРАТОРИ (Edit + Delete) --}}
+                                {{-- Проверяваме дали потребителят съществува И дали е админ --}}
+                            @if(auth()->user() && auth()->user()->role === 'admin')
+        
+                            {{-- Бутон EDIT --}}
+                            <a href="{{ route('movies.edit', $movie->id) }}" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 transition shadow">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                            Edit
+                            </a>
 
-                                    @auth
-                                        <a href="{{ route('movies.edit', $movie->id) }}" class="inline-flex items-center px-3 py-1 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none transition ease-in-out duration-150">
-                                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
-                                            Edit
-                                        </a>
-                                    @endauth
+                            {{-- Бутон DELETE (с иконка кошче) --}}
+                        <form action="{{ route('movies.destroy', $movie->id) }}" method="POST" 
+                                onsubmit="return confirm('Are you sure you want to delete this movie? This cannot be undone.');">
+                            @csrf
+                            @method('DELETE')
+
+                            <button type="submit" class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 transition shadow">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                                Delete
+                            </button>
+                        </form>
+
+    @endif
+
                                 </div>
                             </div>
 

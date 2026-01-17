@@ -6,9 +6,11 @@
             </h2>
 
             @auth
+            @if(auth()->user() && auth()->user()->role === 'admin')
                 <a href="{{ route('movies.create') }}" class="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-bold hover:bg-indigo-700 transition shadow-sm">
                     + Add New Movie
                 </a>
+            @endif
             @endauth
         </div>
     </x-slot>

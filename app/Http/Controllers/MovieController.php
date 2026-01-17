@@ -5,18 +5,28 @@ namespace App\Http\Controllers;
 use App\Models\Movie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class MovieController extends Controller
 {
     // показва формата за добавяне
     public function create()
     {
+        // проверка за админ права
+        if (!Auth::check() || Auth::user()->role !== 'admin') {
+            abort(403, 'Only admins can add movies.');
+        }
+
         return view('movies.create');
     }
 
     // записва данните в базата
     public function store(Request $request)
     {
+        if (!Auth::check() || Auth::user()->role !== 'admin') {
+            abort(403, 'Only admins can add movies.');
+        }
+
         // валидация (за да не се чупи, ако полето е празно)
         $validated = $request->validate([
             'title' => 'required|max:255',
@@ -58,6 +68,25 @@ class MovieController extends Controller
     {
         return view('movies.edit', compact('movie'));
     }
+
+    // метод за изтриване
+    public function destroy(Movie $movie)
+    {
+        if (!Auth::check() || Auth::user()->role !== 'admin') {    
+            abort(403, 'Unauthorized action. Only admins can delete movies.');
+        }
+
+        // ако филмът има плакат, файлът се изтрива
+        if ($movie->poster) {
+            Storage::delete('public/' . $movie->poster);
+        }
+
+        // изтрива записа
+        $movie->delete();
+
+        return redirect()->route('welcome')->with('success', 'Movie deleted successfully!');
+    }
+
 
     // записва промените в базата
     public function update(Request $request, Movie $movie)
