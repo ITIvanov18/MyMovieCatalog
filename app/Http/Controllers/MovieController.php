@@ -133,9 +133,17 @@ public function toggleList(Request $request, Movie $movie)
         if (!$user) {
             abort(403, 'You must be logged in to save movies.');
         }
+        if ($user->role === 'admin') {
+            abort(403, 'Admins cannot create lists.');
+        }
         
-        // ЛОГИКА (всеки потребител има свой списък)
-        $type = 'watchlist';
+        // ако полето липсва, става 'watchlist'
+        $data = $request->validate([
+            'type' => 'in:watchlist,favorite,watched'
+        ]);
+
+        // ако във формата има input type="hidden", го взима. ако ли не - watchlist
+        $type = $data['type'] ?? 'watchlist';
 
         // проверка дали филмът е в списъка НА ТОЗИ user
         $exists = $user->movies()

@@ -2,6 +2,7 @@ import './bootstrap';
 
 import Alpine from 'alpinejs';
 import './movie-manager';
+import './confetti';
 
 window.Alpine = Alpine;
 

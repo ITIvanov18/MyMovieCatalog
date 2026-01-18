@@ -1,6 +1,6 @@
 /**
  * Handles advanced client-side interactions, real-time validation,
- * search filtering, and UI state management.
+ * search filtering and UI state management
  */
 class MovieManager {
     
