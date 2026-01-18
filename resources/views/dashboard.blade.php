@@ -88,15 +88,81 @@
 
                     {{-- АКО Е ОБИКНОВЕН USER --}}
                     @else
-                        <div class="text-center py-10">
-                            <h3 class="text-2xl font-bold mb-3 text-gray-800">Welcome back, {{ auth()->user()->name }}! 👋</h3>
-                            <p class="text-gray-600 mb-8 max-w-lg mx-auto">
-                                We are glad to see you again. Explore our vast catalog and find your next favorite movie to watch.
-                            </p>
+                        
+                        <div x-data="{ tab: 'watchlist' }">
                             
-                            <a href="{{ route('welcome') }}" class="inline-block bg-indigo-600 text-white px-8 py-3 rounded-lg hover:bg-indigo-700 transition shadow-lg font-bold text-lg">
-                                Browse Movies
-                            </a>
+                            {{-- ЗАГЛАВИЕ И ТАБОВЕ --}}
+                            <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+                                <h3 class="text-2xl font-bold text-gray-800">My Library</h3>
+                                
+                                <div class="flex bg-gray-100 p-1 rounded-lg">
+                                    {{-- бутон Watchlist --}}
+                                    <button @click="tab = 'watchlist'" 
+                                            :class="{ 'bg-white shadow text-indigo-600': tab === 'watchlist', 'text-gray-500 hover:text-gray-700': tab !== 'watchlist' }"
+                                            class="px-4 py-2 rounded-md text-sm font-bold transition-all">
+                                        🔖 Watchlist
+                                        <span class="ml-1 text-xs bg-gray-200 px-1.5 py-0.5 rounded-full text-gray-600">{{ $watchlistMovies->count() }}</span>
+                                    </button>
+
+                                    {{-- бутон Favorites --}}
+                                    <button @click="tab = 'favorites'" 
+                                            :class="{ 'bg-white shadow text-pink-600': tab === 'favorites', 'text-gray-500 hover:text-gray-700': tab !== 'favorites' }"
+                                            class="px-4 py-2 rounded-md text-sm font-bold transition-all">
+                                        ❤️ Favorites
+                                        <span class="ml-1 text-xs bg-gray-200 px-1.5 py-0.5 rounded-full text-gray-600">{{ $favoriteMovies->count() }}</span>
+                                    </button>
+
+                                    {{-- бутон History --}}
+                                    <button @click="tab = 'watched'" 
+                                            :class="{ 'bg-white shadow text-green-600': tab === 'watched', 'text-gray-500 hover:text-gray-700': tab !== 'watched' }"
+                                            class="px-4 py-2 rounded-md text-sm font-bold transition-all">
+                                        ✅ History
+                                        <span class="ml-1 text-xs bg-gray-200 px-1.5 py-0.5 rounded-full text-gray-600">{{ $watchedMovies->count() }}</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            {{-- СЪДЪРЖАНИЕ НА ТАБОВЕТЕ --}}
+                            
+                            {{-- WATCHLIST TAB --}}
+                            <div x-show="tab === 'watchlist'" x-transition.opacity>
+                                @if($watchlistMovies->count() > 0)
+                                    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                                        @foreach($watchlistMovies as $movie)
+                                            <x-movie-card-minimal :movie="$movie" />
+                                        @endforeach
+                                    </div>
+                                @else
+                                    <x-empty-state message="Your watchlist is empty." />
+                                @endif
+                            </div>
+
+                            {{-- FAVORITES TAB --}}
+                            <div x-show="tab === 'favorites'" x-transition.opacity style="display: none;">
+                                @if($favoriteMovies->count() > 0)
+                                    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                                        @foreach($favoriteMovies as $movie)
+                                            <x-movie-card-minimal :movie="$movie" />
+                                        @endforeach
+                                    </div>
+                                @else
+                                    <x-empty-state message="No favorite movies yet." />
+                                @endif
+                            </div>
+
+                            {{-- WATCHED TAB --}}
+                            <div x-show="tab === 'watched'" x-transition.opacity style="display: none;">
+                                @if($watchedMovies->count() > 0)
+                                    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                                        @foreach($watchedMovies as $movie)
+                                            <x-movie-card-minimal :movie="$movie" />
+                                        @endforeach
+                                    </div>
+                                @else
+                                    <x-empty-state message="You haven't marked any movies as watched." />
+                                @endif
+                            </div>
+
                         </div>
                     @endif
 

@@ -38,6 +38,9 @@ Route::middleware('auth')->group(function () {
     // управление на филми - CREATE
     Route::get('/movies/create', [MovieController::class, 'create'])->name('movies.create');
     Route::post('/movies', [MovieController::class, 'store'])->name('movies.store');
+
+    // управление на списъка (SAVE/UNSAVE)
+    Route::post('/movies/{movie}/list', [MovieController::class, 'toggleList'])->name('movies.list');
     
     // управление на филми - EDIT & UPDATE
     Route::get('/movies/{movie}/edit', [MovieController::class, 'edit'])->name('movies.edit');

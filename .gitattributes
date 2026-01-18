@@ -1,6 +1,5 @@
 * text=auto eol=lf
 
-*.blade.php diff=html
 *.blade.php linguist-detect=false
 *.css diff=css
 *.html diff=html
@@ -13,15 +12,12 @@ CHANGELOG.md export-ignore
 
 composer.lock linguist-vendored
 package-lock.json linguist-vendored
-
 public/build/* linguist-vendored
 public/assets/* linguist-vendored
 
-public/build/assets/app-CKb6tdUJ.js linguist-vendored=false
+public/build/assets/*.js linguist-vendored=false
 
 resources/views/auth/* linguist-vendored
 resources/views/layouts/* linguist-vendored
 resources/views/components/* linguist-vendored
 resources/views/profile/* linguist-vendored
-resources/views/welcome.blade.php linguist-vendored
-resources/views/dashboard.blade.php linguist-vendored

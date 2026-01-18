@@ -46,4 +46,12 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    // връзка с филмите (Many-to-Many)
+    public function movies()
+    {
+        return $this->belongsToMany(Movie::class, 'movie_user')
+                    ->withPivot('type')
+                    ->withTimestamps();
+    }
 }

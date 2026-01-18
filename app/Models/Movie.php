@@ -8,4 +8,23 @@ class Movie extends Model
 {
     // позволява да се задават данни в тези колони наведнъж
     protected $fillable = ['title', 'director', 'year', 'genre', 'description', 'poster', 'rating'];
+
+    // връзка с потребителите
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'movie_user')
+                    ->withPivot('type')
+                    ->withTimestamps();
+    }
+
+    // проверява дали този филм е в конкретен списък на потребителя
+    public function isInList($user, $type)
+    {
+        if (!$user) return false;
+
+        return $this->users()
+                    ->where('user_id', $user->id)
+                    ->where('type', $type)
+                    ->exists(); // връща true или false
+    }
 }

@@ -43,14 +43,14 @@
                                 </div>
                             @endif
 
-                            {{-- Годината като етикет --}}
+                            {{-- годината като етикет --}}
                             <div class="absolute top-2 right-2 bg-black/60 backdrop-blur-sm text-white text-xs font-bold px-2 py-1 rounded-md border border-white/20">
                                 {{ $movie->year }}
                             </div>
                         </a>
 
                         <div class="p-5 flex flex-col flex-1">
-                            {{-- Заглавие --}}
+                            {{-- заглавие --}}
                             <h3 class="movie-title font-bold text-lg text-gray-900 mb-2 leading-tight">
                                 <a href="{{ route('movies.show', $movie->id) }}" class="hover:text-indigo-600 transition line-clamp-2">
                                     {{ $movie->title }}
@@ -58,9 +58,35 @@
                             </h3>
 
                             <div class="mt-auto pt-3 border-t border-gray-100 flex justify-between items-center">
+                                {{-- ЛЯВО: жанр --}}
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
                                     {{ $movie->genre }}
                                 </span>
+
+                                {{-- ДЯСНО: бутон SAVE --}}
+                                @auth
+                                    @if(auth()->user()->role !== 'admin')
+                                    <form action="{{ route('movies.list', $movie->id) }}" method="POST">
+                                        @csrf
+                                        
+                                        {{-- проверка дали вече е в списъка --}}
+                                        @php 
+                                            $isSaved = $movie->isInList(auth()->user(), 'watchlist'); 
+                                        @endphp
+
+                                        <button type="submit" class="group flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all duration-200 {{ $isSaved ? 'bg-gray-900 text-white shadow-md' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }}">
+                                            
+                                            {{-- иконка --}}
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform group-active:scale-90 {{ $isSaved ? 'fill-current' : 'fill-none stroke-current stroke-2' }}" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                                            </svg>
+
+                                            {{-- текст --}}
+                                            <span>{{ $isSaved ? 'Saved' : 'Save' }}</span>
+                                        </button>
+                                    </form>
+                                    @endif
+                                @endauth
                             </div>
                         </div>
                     </div>

@@ -124,4 +124,33 @@ class MovieController extends Controller
         return redirect()->route('movies.show', $movie->id)
                          ->with('success', 'Movie updated successfully!');
     }
+
+public function toggleList(Request $request, Movie $movie)
+    {
+        /** @var \App\Models\User $user */ 
+        $user = Auth::user();
+
+        if (!$user) {
+            abort(403, 'You must be logged in to save movies.');
+        }
+        
+        // ЛОГИКА (всеки потребител има свой списък)
+        $type = 'watchlist';
+
+        // проверка дали филмът е в списъка НА ТОЗИ user
+        $exists = $user->movies()
+                       ->where('movie_id', $movie->id)
+                       ->wherePivot('type', $type)
+                       ->exists();
+
+        if ($exists) {
+            // маха го само от неговия списък
+            $user->movies()->wherePivot('type', $type)->detach($movie->id);
+        } else {
+            // добавя го към неговия списък
+            $user->movies()->attach($movie->id, ['type' => $type]);
+        }
+
+        return back();
+    }
 }
