@@ -10,21 +10,21 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     
-                    {{-- 1. АКО Е АДМИНИСТРАТОР --}}
+                    {{-- АКО Е АДМИНИСТРАТОР --}}
                     @if(auth()->user()->role === 'admin')
                         <h3 class="text-2xl font-bold mb-6 text-indigo-700">Admin Control Center</h3>
                         
-                        {{-- Статистика (3 карти) --}}
+                        {{-- статистика (3 карти) --}}
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                             <div class="bg-indigo-50 p-6 rounded-lg border border-indigo-100">
                                 <div class="text-indigo-500 text-sm font-semibold uppercase">Total Movies</div>
-                                {{-- Внимание: $movieCount идва от контролера --}}
+                                {{-- $movieCount идва от контролера --}}
                                 <div class="text-4xl font-bold text-gray-800 mt-2">{{ $movieCount ?? 0 }}</div>
                             </div>
 
                             <div class="bg-green-50 p-6 rounded-lg border border-green-100">
                                 <div class="text-green-600 text-sm font-semibold uppercase">Registered Users</div>
-                                {{-- Внимание: $userCount идва от контролера --}}
+                                {{-- $userCount идва от контролера --}}
                                 <div class="text-4xl font-bold text-gray-800 mt-2">{{ $userCount ?? 0 }}</div>
                             </div>
 
@@ -35,7 +35,7 @@
                             </div>
                         </div>
 
-                        {{-- Последни 5 филма (Таблица) --}}
+                        {{-- последни 5 филма (таблица) --}}
                         <h4 class="text-lg font-bold mb-4">Recently Added Movies</h4>
                         <div class="overflow-x-auto border border-gray-200 rounded-lg">
                             <table class="w-full text-left text-sm text-gray-600">
@@ -52,9 +52,29 @@
                                         <tr class="hover:bg-gray-50 transition">
                                             <td class="px-4 py-3 font-medium text-gray-900">{{ $movie->title }}</td>
                                             <td class="px-4 py-3">{{ $movie->year }}</td>
-                                            <td class="px-4 py-3">
-                                                <a href="{{ route('movies.edit', $movie->id) }}" class="text-indigo-600 hover:text-indigo-900 font-semibold">Edit</a>
-                                            </td>
+                                    <td class="px-4 py-3">
+                                        <div class="flex items-center space-x-4">
+                                            {{-- EDIT --}}
+                                            <a href="{{ route('movies.edit', $movie->id) }}" class="text-indigo-600 hover:text-indigo-900 transition" title="Edit Movie">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                                </svg>
+                                            </a>
+
+                                            {{-- DELETE --}}
+                                            <form action="{{ route('movies.destroy', $movie->id) }}" method="POST" 
+                                                onsubmit="return confirm('Delete {{ $movie->title }}?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                
+                                                <button type="submit" class="text-red-500 hover:text-red-700 transition pt-1" title="Delete Movie">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                    </svg>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
                                         </tr>
                                         @endforeach
                                     @else
@@ -66,7 +86,7 @@
                             </table>
                         </div>
 
-                    {{-- 2. АКО Е ОБИКНОВЕН ПОТРЕБИТЕЛ --}}
+                    {{-- АКО Е ОБИКНОВЕН USER --}}
                     @else
                         <div class="text-center py-10">
                             <h3 class="text-2xl font-bold mb-3 text-gray-800">Welcome back, {{ auth()->user()->name }}! 👋</h3>

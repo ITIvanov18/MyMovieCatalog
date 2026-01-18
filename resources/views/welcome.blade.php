@@ -2,72 +2,75 @@
     <x-slot name="header">
         <div class="flex justify-between items-center">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                MyMovieCatalog
+                {{ __('MyMovieCatalog') }}
             </h2>
 
-            @auth
-            @if(auth()->user() && auth()->user()->role === 'admin')
-                <a href="{{ route('movies.create') }}" class="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-bold hover:bg-indigo-700 transition shadow-sm">
-                    + Add New Movie
-                </a>
-            @endif
-            @endauth
+            <div class="relative w-64">
+                <div class="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
+                    <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </div>
+                
+                <input type="text" 
+                       id="movie-search" 
+                       placeholder="Search movies..." 
+                       class="w-full pl-8 pr-4 py-1 border-gray-300 rounded-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                
+                <small id="search-stats" class="absolute top-full right-0 mt-1 text-xs text-gray-500 text-right w-full"></small>
+            </div>
         </div>
     </x-slot>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-
-            <div class="mb-6">
-            <input type="text" id="movie-search" placeholder="Type to search movies..." class="w-full p-2 border rounded-lg shadow-sm">
-            <small id="search-stats" class="text-gray-500"></small>
-            </div>
             
+            {{-- СПИСЪК С ФИЛМИ --}}
             @if($movies->count() > 0)
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                  @foreach ($movies as $movie)
-            <div class="movie-card bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden flex flex-col h-full group">
-                
-                <a href="{{ route('movies.show', $movie->id) }}" class="relative block w-full aspect-[2/3] overflow-hidden">
-                    @if ($movie->poster)
-                        <img src="{{ asset('storage/' . $movie->poster) }}" 
-                             alt="{{ $movie->title }}" 
-                             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
-                    @else
-                        <div class="w-full h-full bg-gray-200 flex items-center justify-center text-gray-500">
-                            No Poster
+                    <div class="movie-card bg-white rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden flex flex-col h-full group transform hover:-translate-y-1">
+                        
+                        <a href="{{ route('movies.show', $movie->id) }}" class="relative block w-full aspect-[2/3] overflow-hidden bg-gray-100">
+                            @if ($movie->poster)
+                                <img src="{{ asset('storage/' . $movie->poster) }}" 
+                                     alt="{{ $movie->title }}" 
+                                     class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            @else
+                                <div class="w-full h-full flex flex-col items-center justify-center text-gray-400">
+                                    <svg class="w-12 h-12 mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                    <span class="text-sm">No Poster</span>
+                                </div>
+                            @endif
+
+                            {{-- Годината като етикет --}}
+                            <div class="absolute top-2 right-2 bg-black/60 backdrop-blur-sm text-white text-xs font-bold px-2 py-1 rounded-md border border-white/20">
+                                {{ $movie->year }}
+                            </div>
+                        </a>
+
+                        <div class="p-5 flex flex-col flex-1">
+                            {{-- Заглавие --}}
+                            <h3 class="movie-title font-bold text-lg text-gray-900 mb-2 leading-tight">
+                                <a href="{{ route('movies.show', $movie->id) }}" class="hover:text-indigo-600 transition line-clamp-2">
+                                    {{ $movie->title }}
+                                </a>
+                            </h3>
+
+                            <div class="mt-auto pt-3 border-t border-gray-100 flex justify-between items-center">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+                                    {{ $movie->genre }}
+                                </span>
+                            </div>
                         </div>
-                    @endif
-
-                    <div class="absolute top-2 right-2 bg-black/70 text-white text-xs font-bold px-2 py-1 rounded">
-                        {{ $movie->year }}
                     </div>
-                </a>
-
-                <div class="p-4 flex flex-col flex-1">
-                    <h3 class="movie-title font-bold text-lg text-gray-900 mb-1 leading-tight truncate">
-                        <a href="{{ route('movies.show', $movie->id) }}" class="hover:text-indigo-600 transition">
-                            {{ $movie->title }}
-                        </a>
-                    </h3>
-
-                    <div class="mt-auto flex justify-between items-center">
-                        <span class="inline-block bg-indigo-50 text-indigo-700 text-xs font-semibold px-2 py-1 rounded-md border border-indigo-100">
-                            {{ $movie->genre }}
-                        </span>
-                    </div>
+                @endforeach
                 </div>
-            </div>
-        @endforeach
-    </div>
             @else
-                <div class="text-center py-20">
-                    <h3 class="text-xl font-bold text-gray-700">No movies yet.</h3>
-                    @auth
-                        <a href="{{ route('movies.create') }}" class="text-indigo-600 hover:underline mt-2 inline-block font-bold">
-                            + Add your first movie
-                        </a>
-                    @endauth
+                <div class="text-center py-20 bg-gray-50 rounded-xl border-2 border-dashed border-gray-200">
+                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"></path></svg>
+                    <h3 class="mt-2 text-sm font-medium text-gray-900">No movies found</h3>
+                    <p class="mt-1 text-sm text-gray-500">Get started by creating a new movie.</p>
                 </div>
             @endif
 

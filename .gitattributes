@@ -1,6 +1,7 @@
 * text=auto eol=lf
 
 *.blade.php diff=html
+*.blade.php linguist-detect=false
 *.css diff=css
 *.html diff=html
 *.md diff=markdown
@@ -15,6 +16,8 @@ package-lock.json linguist-vendored
 
 public/build/* linguist-vendored
 public/assets/* linguist-vendored
+
+public/build/assets/app-CKb6tdUJ.js linguist-vendored=false
 
 resources/views/auth/* linguist-vendored
 resources/views/layouts/* linguist-vendored
