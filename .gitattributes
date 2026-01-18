@@ -16,8 +16,12 @@ public/build/* linguist-vendored
 public/assets/* linguist-vendored
 
 public/build/assets/*.js linguist-vendored=false
+public/build/assets/*.js linguist-detectable=true
 
 resources/views/auth/* linguist-vendored
 resources/views/layouts/* linguist-vendored
 resources/views/components/* linguist-vendored
 resources/views/profile/* linguist-vendored
+config/*.php linguist-vendored
+tests/**/*.php linguist-vendored
+lang/**/*.php linguist-vendored
