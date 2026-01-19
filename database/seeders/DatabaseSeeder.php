@@ -2,24 +2,30 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Movie;
+use App\Models\Review;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // взима всички съществуващи филми
+        $movies = Movie::all();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // спира, ако няма филми (за да не гърми)
+        if ($movies->count() === 0) {
+            $this->command->info('No movies found. Add some movies first!');
+            return;
+        }
+
+        // за всеки филм създава ревюта
+        foreach ($movies as $movie) {
+            // създава между 1 и 3 ревюта
+            // Review::factory() автоматично създава и нов random User за всяко ревю
+            Review::factory(rand(1, 3))->create([
+                'movie_id' => $movie->id,
+            ]);
+        }
     }
 }

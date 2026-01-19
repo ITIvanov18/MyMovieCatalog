@@ -27,4 +27,9 @@ class Movie extends Model
                     ->where('type', $type)
                     ->exists(); // връща true или false
     }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class)->latest(); // latest() ги подрежда от най-новите
+    }
 }

@@ -25,7 +25,7 @@
                             @endif
                         </div>
 
-                        <div class="w-full md:w-2/3">
+                        <div class="w-full md:w-2/3 flex flex-col">
 
                             <div class="flex justify-between items-start">
                                 <div>
@@ -140,6 +140,117 @@
                     </div>
 
                 </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- СЕКЦИЯ ЗА РЕВЮТА И РЕЙТИНГ --}}
+    <div class="pb-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+                
+                <h3 class="text-2xl font-bold text-gray-900 mb-8 flex items-center gap-3">
+                    💬 Reviews & Discussion
+                    {{-- Тук по-късно ще сложим бройката --}}
+                    <span class="text-gray-400 text-sm font-normal bg-gray-100 px-2 py-1 rounded-full">Community</span>
+                </h3>
+
+                {{-- ФОРМА ЗА ПИСАНЕ (Само за логнати) --}}
+                @auth
+                <div class="flex gap-4 mb-10 p-4 bg-gray-50 rounded-xl border border-gray-100">
+                    {{-- Аватарче с първата буква --}}
+                    <div class="w-12 h-12 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-xl shrink-0 shadow-md">
+                        {{ substr(auth()->user()->name, 0, 1) }}
+                    </div>
+
+                    {{-- Alpine.js компонент за формата и звездите --}}
+                    <form action="#" method="POST" class="w-full" x-data="{ rating: 0, hoverRating: 0 }">
+                        @csrf
+                        
+                        {{-- Текстово поле --}}
+                        <textarea name="review" 
+                                  class="w-full border-gray-300 rounded-lg shadow-sm focus:border-indigo-500 focus:ring-indigo-500 min-h-[100px] text-gray-700 placeholder-gray-400" 
+                                  placeholder="What did you think about {{ $movie->title }}? Share your thoughts..."></textarea>
+                        
+                        <div class="flex flex-col md:flex-row justify-between items-center mt-4 gap-4">
+                            
+                            {{-- ЗВЕЗДИЧКИ (Интерактивни) --}}
+                            <div class="flex items-center gap-2">
+                                <span class="text-gray-500 text-sm font-medium mr-2">Your Rating:</span>
+                                <div class="flex text-2xl cursor-pointer">
+                                    {{-- Скрит input, който ще прати данните към базата --}}
+                                    <input type="hidden" name="rating" :value="rating">
+
+                                    {{-- Генерираме 5 звезди --}}
+                                    <template x-for="star in 5">
+                                        <button type="button" 
+                                                @click="rating = star" 
+                                                @mouseenter="hoverRating = star" 
+                                                @mouseleave="hoverRating = 0"
+                                                class="transition-transform duration-150 hover:scale-110 focus:outline-none"
+                                                :class="{
+                                                    'text-yellow-400': hoverRating >= star || (rating >= star && hoverRating === 0),
+                                                    'text-gray-300': !(hoverRating >= star || (rating >= star && hoverRating === 0))
+                                                }">
+                                            ★
+                                        </button>
+                                    </template>
+                                </div>
+                                
+                                {{-- Текстче за оценка (показва се динамично) --}}
+                                <span class="text-sm font-bold ml-2 text-indigo-600" x-text="rating > 0 ? rating + '/5' : ''"></span>
+                            </div>
+
+                            <button type="submit" class="bg-gray-900 text-white px-6 py-2.5 rounded-full text-sm font-bold hover:bg-gray-800 transition shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                                Post Review
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                @else
+                <div class="text-center py-8 bg-gray-50 rounded-lg border border-dashed border-gray-300 mb-8">
+                    <p class="text-gray-500">Please <a href="{{ route('login') }}" class="text-indigo-600 font-bold hover:underline">log in</a> to leave a review.</p>
+                </div>
+                @endauth
+
+                {{-- СПИСЪК С КОМЕНТАРИ --}}
+                @forelse($movie->reviews as $review)
+                        <div class="flex gap-4 group transition hover:bg-gray-50 p-4 rounded-xl border border-transparent hover:border-gray-100">
+                            {{-- Аватар (първа буква от името) --}}
+                            <div class="w-10 h-10 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold shrink-0 text-sm border border-indigo-100 uppercase">
+                                {{ substr($review->user->name, 0, 1) }}
+                            </div>
+                            
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between mb-1">
+                                    <h4 class="font-bold text-gray-900">{{ $review->user->name }}</h4>
+                                    <span class="text-xs text-gray-400">{{ $review->created_at->diffForHumans() }}</span>
+                                </div>
+                                
+                                {{-- Динамични Звездички --}}
+                                <div class="text-yellow-400 text-sm mb-2 flex">
+                                    @for($i = 1; $i <= 5; $i++)
+                                        @if($i <= $review->rating) 
+                                            ★ 
+                                        @else 
+                                            <span class="text-gray-200">★</span> 
+                                        @endif
+                                    @endfor
+                                </div>
+                                
+                                <p class="text-gray-600 leading-relaxed text-sm">
+                                    {{ $review->content }}
+                                </p>
+                            </div>
+                        </div>
+                    @empty
+                        {{-- Ако няма никакви коментари --}}
+                        <div class="text-center py-10 bg-gray-50 rounded-lg border border-dashed border-gray-200">
+                            <p class="text-gray-400 italic mb-2">No reviews yet.</p>
+                            <p class="text-sm text-gray-500">Be the first to share your thoughts regarding <span class="font-bold">{{ $movie->title }}</span>!</p>
+                        </div>
+                    @endforelse
+
             </div>
         </div>
     </div>
