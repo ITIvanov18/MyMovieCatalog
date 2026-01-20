@@ -14,7 +14,31 @@ use Illuminate\Support\Facades\Route;
 
 // начална страница
 Route::get('/', function () {
-    $movies = Movie::with('reviews')->get();
+    // withAvg се добавя, за да има поле 'reviews_avg_rating'
+    $query = App\Models\Movie::query()->withAvg('reviews', 'rating');
+
+    // логика за сортирането
+    switch (request('sort')) {
+        case 'title_asc':
+            $query->orderBy('title', 'asc');
+            break;
+        case 'title_desc':
+            $query->orderBy('title', 'desc');
+            break;
+        case 'rating_desc':
+            // сортиране по изчислен среден рейтинг
+            $query->orderBy('reviews_avg_rating', 'desc'); 
+            break;
+        case 'rating_asc':
+            $query->orderBy('reviews_avg_rating', 'asc');
+            break;
+        default:
+            $query->latest();
+            break;
+    }
+
+    $movies = $query->get();
+
     return view('welcome', compact('movies'));
 })->name('welcome');
 

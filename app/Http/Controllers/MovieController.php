@@ -184,9 +184,11 @@ class MovieController extends Controller
 
     public function destroyReview(Review $review)
     {
+        $user = Auth::user();
+
         // ПРОВЕРКА НА ПРАВАТА:
         // само авторът ИЛИ админът могат да трият
-        if (auth()->id() !== $review->user_id && auth()->user()->role !== 'admin') {
+        if ($user->id !== $review->user_id && $user->role !== 'admin') {
             abort(403, 'Unauthorized action.');
         }
 

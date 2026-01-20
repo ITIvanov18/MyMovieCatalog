@@ -24,6 +24,42 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+
+            {{-- търсене и сортиране --}}
+            <div class="flex flex-col md:flex-row justify-between items-center mb-5 gap-4">
+                
+                <h2 class="text-2xl font-bold text-gray-800"></h2>
+
+                {{-- ФОРМА ЗА СОРТИРАНЕ --}}
+                <form method="GET" action="{{ route('welcome') }}" class="flex items-center">
+                    <label for="sort" class="mr-3 text-sm font-medium text-gray-700">Sort by:</label>
+                    
+                    <select name="sort" id="sort" onchange="this.form.submit()" 
+                            class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm text-sm py-1 pl-3 pr-10 cursor-pointer">
+                        
+                        <option value="latest" {{ request('sort') == 'latest' ? 'selected' : '' }}>
+                            Newest Added
+                        </option>
+                        
+                        <option value="title_asc" {{ request('sort') == 'title_asc' ? 'selected' : '' }}>
+                            Title (A-Z)
+                        </option>
+                        
+                        <option value="title_desc" {{ request('sort') == 'title_desc' ? 'selected' : '' }}>
+                            Title (Z-A)
+                        </option>
+                        
+                        <option value="rating_desc" {{ request('sort') == 'rating_desc' ? 'selected' : '' }}>
+                            Highest Rated
+                        </option>
+                        
+                        <option value="rating_asc" {{ request('sort') == 'rating_asc' ? 'selected' : '' }}>
+                            Lowest Rated
+                        </option>
+                        
+                    </select>
+                </form>
+            </div>
             
             {{-- СПИСЪК С ФИЛМИ --}}
             @if($movies->count() > 0)
