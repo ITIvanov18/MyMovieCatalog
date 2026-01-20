@@ -51,6 +51,10 @@ Route::middleware('auth')->group(function () {
 
     // публикуване на ревю
     Route::post('/movies/{movie}/reviews', [MovieController::class, 'storeReview'])->name('movies.reviews.store');
+    
+    // изтриване на ревю (ползва Review модела директно)
+    Route::delete('/reviews/{review}', [App\Http\Controllers\MovieController::class, 'destroyReview'])
+        ->name('reviews.destroy');
 });
 
 // преглед на отделен филм

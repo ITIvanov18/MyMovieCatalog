@@ -4,7 +4,7 @@
             <div class="flex">
                 <div class="shrink-0 flex items-center">
                     <a href="{{ url('/') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
+                        <x-application-logo class="block h-11 w-auto fill-current text-gray-800" />
                     </a>
                 </div>
 
@@ -13,10 +13,13 @@
                     <x-nav-link :href="url('/')" :active="request()->is('/')">
                         {{ __('Catalog') }}
                     </x-nav-link>
-
                     @auth
                         <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                            {{ __('Dashboard') }}
+                            @if(auth()->user()->role === 'admin')
+                                {{ __('Dashboard') }}
+                            @else
+                                {{ __('My Library') }}
+                            @endif
                         </x-nav-link>
                     @endauth
                 </div>
@@ -74,9 +77,14 @@
             <x-responsive-nav-link :href="url('/')" :active="request()->is('/')">
                 {{ __('Catalog') }}
             </x-responsive-nav-link>
+
             @auth
                 <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                    {{ __('Dashboard') }}
+                    @if(auth()->user()->role === 'admin')
+                        {{ __('Dashboard') }}
+                    @else
+                        {{ __('My Library') }}
+                    @endif
                 </x-responsive-nav-link>
             @endauth
         </div>

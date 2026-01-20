@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Review;
 
 use App\Models\Movie;
 use Illuminate\Http\Request;
@@ -179,5 +180,18 @@ class MovieController extends Controller
         ]);
 
         return back()->with('success', 'Review posted successfully!');
+    }
+
+    public function destroyReview(Review $review)
+    {
+        // ПРОВЕРКА НА ПРАВАТА:
+        // само авторът ИЛИ админът могат да трият
+        if (auth()->id() !== $review->user_id && auth()->user()->role !== 'admin') {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $review->delete();
+
+        return back()->with('success', 'Review deleted successfully!');
     }
 }

@@ -171,6 +171,10 @@
                                   class="w-full border-gray-300 rounded-lg shadow-sm focus:border-indigo-500 focus:ring-indigo-500 min-h-[100px] text-gray-700 placeholder-gray-400" 
                                   placeholder="What did you think about {{ $movie->title }}? Share your thoughts..."></textarea>
                         
+                        @error('content')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+
                         <div class="flex flex-col md:flex-row justify-between items-center mt-4 gap-4">
                             
                             {{-- ЗВЕЗДИЧКИ (интерактивни) --}}
@@ -197,6 +201,9 @@
                                 
                                 {{-- текст за оценка (показва се динамично) --}}
                                 <span class="text-sm font-bold ml-2 text-indigo-600" x-text="rating > 0 ? rating + '/5' : ''"></span>
+                                @error('rating')
+                                    <p class="text-red-500 text-sm mt-1">Please select a rating (1-5 stars).</p>
+                                @enderror
                             </div>
 
                             <button type="submit" class="bg-gray-900 text-white px-6 py-2.5 rounded-full text-sm font-bold hover:bg-gray-800 transition shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
@@ -213,7 +220,7 @@
 
                 {{-- СПИСЪК С КОМЕНТАРИ --}}
                 @forelse($movie->reviews as $review)
-                        <div class="flex gap-4 group transition hover:bg-gray-50 p-4 rounded-xl border border-transparent hover:border-gray-100">
+                        <div class="relative flex gap-4 group transition hover:bg-gray-50 p-4 rounded-xl border border-transparent hover:border-gray-100">
                             {{-- аватар (първа буква от името) --}}
                             <div class="w-10 h-10 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold shrink-0 text-sm border border-indigo-100 uppercase">
                                 {{ substr($review->user->name, 0, 1) }}
@@ -240,15 +247,30 @@
                                     {{ $review->content }}
                                 </p>
                             </div>
+                            
+                            {{-- КОШЧЕ ЗА ИЗТРИВАНЕ --}}
+                            {{-- показва се само ако си АВТОР или АДМИН --}}
+                            @auth
+                                @if(auth()->id() === $review->user_id || auth()->user()->role === 'admin')
+                                    <form action="{{ route('reviews.destroy', $review->id) }}" method="POST" class="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" onclick="return confirm('Delete this review?')" class="text-gray-400 hover:text-red-600 p-2 rounded-full hover:bg-red-50 transition" title="Delete Review">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                            </svg>
+                                        </button>
+                                    </form>
+                                @endif
+                            @endauth
                         </div>
-                    @empty
-                        {{-- ако няма никакви коментари --}}
-                        <div class="text-center py-10 bg-gray-50 rounded-lg border border-dashed border-gray-200">
-                            <p class="text-gray-400 italic mb-2">No reviews yet.</p>
-                            <p class="text-sm text-gray-500">Be the first to share your thoughts regarding <span class="font-bold">{{ $movie->title }}</span>!</p>
-                        </div>
-                    @endforelse
-
+                        @empty
+                            {{-- ако няма никакви коментари --}}
+                            <div class="text-center py-10 bg-gray-50 rounded-lg border border-dashed border-gray-200">
+                                <p class="text-gray-400 italic mb-2">No reviews yet.</p>
+                                <p class="text-sm text-gray-500">Be the first to share your thoughts regarding <span class="font-bold">{{ $movie->title }}</span>!</p>
+                            </div>
+                        @endforelse
             </div>
         </div>
     </div>
