@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 
 // начална страница
 Route::get('/', function () {
-    $movies = Movie::latest()->get();
+    $movies = Movie::with('reviews')->get();
     return view('welcome', compact('movies'));
 })->name('welcome');
 
@@ -48,6 +48,9 @@ Route::middleware('auth')->group(function () {
 
     // управление на филми - DELETE
     Route::delete('/movies/{movie}', [MovieController::class, 'destroy'])->name('movies.destroy');
+
+    // публикуване на ревю
+    Route::post('/movies/{movie}/reviews', [MovieController::class, 'storeReview'])->name('movies.reviews.store');
 });
 
 // преглед на отделен филм

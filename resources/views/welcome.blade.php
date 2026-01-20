@@ -43,6 +43,14 @@
                                 </div>
                             @endif
 
+                            {{-- балонче за рейтинг --}}
+                            @if($movie->avg_rating)
+                                <div class="absolute top-2 left-2 bg-black/60 backdrop-blur-md text-white px-2 py-1 rounded-lg flex items-center gap-1 shadow-lg border border-white/20">
+                                    <span class="text-yellow-400 text-lg leading-none">★</span>
+                                    <span class="text-xs font-bold pt-0.7">{{ $movie->avg_rating }}</span>
+                                </div>
+                            @endif
+
                             {{-- годината като етикет --}}
                             <div class="absolute top-2 right-2 bg-black/60 backdrop-blur-sm text-white text-xs font-bold px-2 py-1 rounded-md border border-white/20">
                                 {{ $movie->year }}

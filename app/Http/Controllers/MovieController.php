@@ -125,7 +125,7 @@ class MovieController extends Controller
                          ->with('success', 'Movie updated successfully!');
     }
 
-public function toggleList(Request $request, Movie $movie)
+    public function toggleList(Request $request, Movie $movie)
     {
         /** @var \App\Models\User $user */ 
         $user = Auth::user();
@@ -160,5 +160,24 @@ public function toggleList(Request $request, Movie $movie)
         }
 
         return back();
+    }
+
+    public function storeReview(Request $request, Movie $movie)
+    {
+        // валидация
+        $validated = $request->validate([
+            'content' => 'required|string|min:10', // поне 10 символа
+            'rating' => 'required|integer|min:1|max:5', // оценка от 1 до 5
+        ]);
+
+        // създаване на ревюто
+        // Laravel автоматично попълва movie_id заради връзката
+        $movie->reviews()->create([
+            'user_id' => Auth::id(), // взима ID-то на логнатия потребител
+            'content' => $validated['content'],
+            'rating' => $validated['rating'],
+        ]);
+
+        return back()->with('success', 'Review posted successfully!');
     }
 }

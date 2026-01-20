@@ -32,4 +32,13 @@ class Movie extends Model
     {
         return $this->hasMany(Review::class)->latest(); // latest() ги подрежда от най-новите
     }
+
+    public function getAvgRatingAttribute()
+    {
+        // смята average на колоната 'rating'
+        $avg = $this->reviews()->avg('rating');
+
+        // ако има оценка, я форматира до 1 знак, ако не връща null
+        return $avg ? number_format($avg, 1) : null;
+    }
 }
