@@ -55,7 +55,7 @@
 
 ## 📸 Screenshots
 
-*(Add screenshots of your application here later)*
+<img width="2559" height="1467" alt="Adobe Express - file" src="https://github.com/user-attachments/assets/b9c57689-3ffb-4553-94eb-55287f1f1b0f" />
 
 ---
 
