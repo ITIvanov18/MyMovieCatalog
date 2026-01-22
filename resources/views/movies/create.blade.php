@@ -36,6 +36,9 @@
                                     <option>Horror</option>
                                     <option>Romance</option>
                                     <option>Documentary</option>
+                                    <option>Crime</option>
+                                    <option>Adventure</option>
+                                    <option>Mystery</option>
                                     <option>Biography</option>
                                     <option>Fantasy</option>
                                     <option>Thriller</option>
