@@ -10,6 +10,7 @@
 
                 <div class="hidden space-x-8 sm:-my-px sm:flex" style="margin-left: 30px;">
                     
+                <!-- Основни навигационни линкове -->
                     <x-nav-link :href="url('/')" :active="request()->is('/')">
                         {{ __('Catalog') }}
                     </x-nav-link>
@@ -25,6 +26,7 @@
                 </div>
             </div>
 
+            <!-- Настройки на потребителя и връзки за влизане/регистрация -->
             <div class="hidden sm:flex sm:items-center sm:ml-6">
                 @auth
                     <x-dropdown align="right" width="48">
@@ -38,6 +40,8 @@
                                 </div>
                             </button>
                         </x-slot>
+
+                        <!-- Настройки на падащото меню -->
 
                         <x-slot name="content">
                             <x-dropdown-link :href="route('profile.edit')">
@@ -61,6 +65,7 @@
                 @endauth
             </div>
 
+            <!-- Хамбургер меню за мобилни устройства -->
             <div class="-mr-2 flex items-center sm:hidden">
                 <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none transition duration-150 ease-in-out">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
@@ -72,6 +77,7 @@
         </div>
     </div>
 
+    <!-- Мобилно меню -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="url('/')" :active="request()->is('/')">

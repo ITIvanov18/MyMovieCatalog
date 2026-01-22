@@ -44,7 +44,7 @@
 
 ## 🛠️ Tech Stack
 
-* **Backend:** PHP 8.2+, Laravel Framework
+* **Backend:** PHP 8.5, Laravel Framework
 * **Frontend:** Blade Templates, Tailwind CSS
 * **Interactivity:** Alpine.js (Dropdowns, Star Rating system, Flash messages)
 * **Build Tools:** Node.js, NPM, Vite (Asset Bundling & HMR)
@@ -55,7 +55,7 @@
 
 ## 📸 Screenshots
 
-*(Add screenshots of your application here later)*
+<img width="2559" height="1467" alt="Adobe Express - file" src="https://github.com/user-attachments/assets/b9c57689-3ffb-4553-94eb-55287f1f1b0f" />
 
 ---
 
@@ -109,6 +109,6 @@ The app will be available at `http://localhost:8000`.
 ## 🔑 Accounts
 You can register a new account via the UI. To make a user an Admin:
 
-1. Open your database (phpMyAdmin / TablePlus).
+1. Open your database (phpMyAdmin / MySQL Workbench).
 2. Find the `users` table.
 3. Change the `role` column from `user` to `admin`.

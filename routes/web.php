@@ -3,7 +3,6 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MovieController;
-use App\Models\Movie;
 use Illuminate\Support\Facades\Route;
 
 /*
